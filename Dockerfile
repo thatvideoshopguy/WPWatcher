@@ -1,6 +1,6 @@
 # WPWatcher Dockerfile
 FROM ruby:alpine
-# Install dependencies ruby gem 
+# Install dependencies ruby gem
 RUN apk --update add --virtual build-dependencies ruby-dev build-base &&\
     apk --update add curl &&\
     apk --update add git
@@ -19,7 +19,7 @@ RUN deluser --remove-home wpwatcher >/dev/null 2>&1 || true
 # RUN delgroup wp >/dev/null 2>&1 || true
 # Init folder tree
 RUN mkdir /wpwatcher && mkdir /wpwatcher/.wpwatcher
-# Add only required scripts 
+# Add only required scripts
 COPY setup.py /wpwatcher/
 COPY README.md /wpwatcher/
 COPY ./wpwatcher/* /wpwatcher/wpwatcher/

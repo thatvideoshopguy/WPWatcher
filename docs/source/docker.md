@@ -1,39 +1,79 @@
-# Docker install
+# Docker Installation
 
+The Docker image offers a convenient way to run WPWatcher without installing Ruby and its dependencies on your host machine. It also makes managing persistent storage easier using Docker volumes.
 
-- Clone the repository
-- Install docker image 
+## Clone the repository
 
-<!-- With the user UID, `wpwatcher` will then run as this user. The following will use the current logged user UID. Won't work if you build the image as root.
+Clone the WPWatcher repository to your local machine:
+
 ```bash
-docker image build \
-    --build-arg USER_ID=$(id -u ${USER}) \
-    -t wpwatcher .
+git clone tristanlatr/WPWatcher
 ```
-- Create and map a WPWatcher folder containing your `wpwatcher.conf` file to the docker runner.
-`wpwatcher` command would look like :  
+
+Then, navigate to the cloned repository:
+
 ```bash
-docker run -it -v '/path/to/wpwatcher.conf/folder/:/wpwatcher/.wpwatcher/' wpwatcher [...]
-``` -->
+cd WPWatcher
+```
+
+## Build the Docker image
+
+Build the Docker image using the following command:
 
 ```bash
 docker image build -t wpwatcher .
 ```
 
-- `wpwatcher` command would look like :  
-```
-docker run -it -v 'wpwatcher_data:/wpwatcher/.wpwatcher/' wpwatcher
-```
+## Setup the Docker volume
 
-It will use [docker volumes](https://stackoverflow.com/questions/18496940/how-to-deal-with-persistent-storage-e-g-databases-in-docker?answertab=votes#tab-top) in order to write files and save reports
+Create a Docker volume named `wpwatcher_data` to manage persistent storage across containers:
 
-- Create config file: As root, check `docker volume inspect wpwatcher_data` to see Mountpoint, then create the config file
 ```bash
-docker run -it wpwatcher --template_conf > /var/lib/docker/volumes/wpwatcher_data/_data/wpwatcher.conf
-vim /var/lib/docker/volumes/wpwatcher_data/_data/wpwatcher.conf
+docker volume create wpwatcher_data
 ```
 
-- Create an alias and your good to go
+## Create the configuration file
+
+WPWatcher requires a configuration file stored in the Docker volume created earlier.
+
+First, generate a template configuration file on your host machine:
+
+```bash
+docker run --rm --entrypoint "wpwatcher" wpwatcher --template_conf > wpwatcher.conf
 ```
-alias wpwatcher="docker run -it -v 'wpwatcher_data:/wpwatcher/.wpwatcher/' wpwatcher"
+
+Next, edit the configuration file with your preferred text editor and save your changes, for example vim:
+
+```bash
+vim wpwatcher.conf
+```
+
+Finally, copy the configuration file to the Docker volume:
+
+```bash
+docker run -v "$(pwd)":/host_directory -v wpwatcher_data:/wpwatcher_data --entrypoint "cp" wpwatcher /host_directory/wpwatcher.conf /wpwatcher_data/wpwatcher.conf
+```
+
+## Create an alias for easy use
+
+Add an alias to simplify running WPWatcher with the correct volume mapping attached. To make the alias permanent, append it to your ~/.bashrc:
+
+```bash
+echo "alias wpwatcher=\"docker run -it -v 'wpwatcher_data:/wpwatcher/.wpwatcher/' wpwatcher\"" >> ~/.bashrc && source ~/.bashrc
+```
+
+Or you can append it to ~/.zshrc:
+
+```bash
+echo "alias wpwatcher=\"docker run -it -v 'wpwatcher_data:/wpwatcher/.wpwatcher/' wpwatcher\"" >> ~/.zshrc && source ~/.zshrc
+```
+
+Now you're all set to use WPWatcher with Docker!
+
+## Run WPWatcher container
+
+Now you can run WPWatcher, using the `wpwatcher --flag` command. For example, to run WPWatcher with the `--help` flag, run the following command:
+
+```bash
+wpwatcher --help
 ```
