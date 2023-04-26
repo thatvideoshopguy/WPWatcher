@@ -51,7 +51,7 @@ vim wpwatcher.conf
 Finally, copy the configuration file to the Docker volume:
 
 ```bash
-docker run -v "$(pwd)":/host_directory -v wpwatcher_data:/wpwatcher_data --entrypoint "cp" wpwatcher /host_directory/wpwatcher.conf /wpwatcher_data/wpwatcher.conf
+docker run -v "$(pwd)":/host_directory -v wpwatcher_data:/wpwatcher_data --entrypoint "cp" --user=root wpwatcher /host_directory/wpwatcher.conf /wpwatcher_data/wpwatcher.conf
 ```
 
 ## Create an alias for easy use
