@@ -1,7 +1,7 @@
 Welcome to WPWatcher's documentation!
-===================================== 
+=====================================
 
-Wordpress Watcher is a wrapper for WPScan that manages scans on multiple sites and reports by email and/or syslog. 
+Wordpress Watcher is a wrapper for WPScan that manages scans on multiple sites and reports by email and/or syslog.
 Schedule scans and get notified when vulnerabilities, outdated plugins and other risks are found.
 
 .. toctree::

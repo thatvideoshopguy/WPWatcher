@@ -29,8 +29,8 @@ version = __version__
 # ones.
 extensions = [
     "sphinx_rtd_theme",
-    "sphinx.ext.intersphinx", 
-    "recommonmark", 
+    "sphinx.ext.intersphinx",
+    "recommonmark",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
